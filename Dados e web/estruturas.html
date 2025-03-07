@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>Média</title>
+</head>
+<body>
+    <form id="form1">
+        Digite a nota da N1: <input name="num1" type="number" id="n1" size="20" step="0.5">
+        Digite a nota da N2: <input name="num2" type="number" id="n2" size="20" step="0.5">
+        Digite as Faltas: <input name="faltas" type="number" id="f" size="20"><br>
+    </form>
+<button onclick="Media()">Calcular</button>
+
+<script>
+    function Media(){
+        var n1 = parseFloat(document.getElementById("n1").value);
+        var n2 = parseFloat(document.getElementById("n2").value);
+        var n3 = parseFloat(document.getElementById("n3").value);
+        var f =parseFloat(document.getElementById("f").value);
+
+
+        var media = (n1*0.4 + n2*0.6).toFixed(1);
+       
+       
+        document.write("A media e " + media);
+        if(media >= 6){
+            if(f>20){
+                document.write("<br><br> reprovado por falt")
+            }
+            else{
+                document.write("<br><br> Aproavado");
+            }
+           
+        }
+        
+        
+         else{
+            document.write("<br><br> Reprovado por falta de nota");
+            if(f>20){
+                document.write(" e falta")
+            }
+        }
+        
+
+        
+ 
+    }
+</script>
+</body>
+
+</html>
