@@ -10,6 +10,10 @@ var col = 0; // letra atual
 //controle de finalizar o jogo
 var gameOver = false;
 
+// para 2 jogadores
+var gameOver1 = false;
+var gameOver2 = false;
+
 //palavra teste
 //var word = "AULAS";
 //Lista de palavras
@@ -18,28 +22,64 @@ var wordList = ["termo", "suíte", "ávido", "festa", "bebia", "honra", "ouvir",
 
 var wordListSemAcento = wordList.map(RemoveAcentos);
 
-var word = wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
+//selecão da palavra aleatória
+var word1;
+var word2;
 
-var wordSemAcento = RemoveAcentos(word);
+var word1SemAcento;
+var word2SemAcento;
 
-console.log(word);
+
 //Função executada ao abiri o arquivo
 window.onload = function () {
+    wordSelection();
     initialize();
 }
 
+function wordSelection()
+{
+    word1 =  wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
+    word2 = wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
+    while(word2 == word1)
+    {
+        word2 = wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
+
+    }
+    word1 = word1.toUpperCase();
+    word2 = word2.toUpperCase();
+
+    word1SemAcento = RemoveAcentos(word1);
+    word2SemAcento = RemoveAcentos(word2);
+   
+    tentativa = "";
+    console.log(word1);
+    console.log(word2);
+
+}
 function initialize()//função que cria o jogo inicial
 {
-    //criar o jogo
+    //criar o jogo 1
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
 
             let tile = document.createElement("span");//criar um elemento para configurar a caixa da letra
-            tile.id = "jogo-" + r.toString() + "-" + c.toString(); //adicionar um id para localizar este elemento padrão jogo-linha-coluna
+            tile.id = "jogo1-" + r.toString() + "-" + c.toString(); //adicionar um id para localizar este elemento padrão jogo-linha-coluna
             tile.classList.add("tile");//adiconar a classe tile
             tile.innerText = "";// adicionar um texto vazio para poder receber uma letra
-            document.getElementById("jogo").appendChild(tile);
+            document.getElementById("jogo1").appendChild(tile);
+        }
+
+    }
+    //criar jogo 2
+    for (let r = 0; r < height; r++) {
+        for (let c = 0; c < width; c++) {
+
+            let tile = document.createElement("span");//criar um elemento para configurar a caixa da letra
+            tile.id = "jogo2-" + r.toString() + "-" + c.toString(); //adicionar um id para localizar este elemento padrão jogo-linha-coluna
+            tile.classList.add("tile");//adiconar a classe tile
+            tile.innerText = "";// adicionar um texto vazio para poder receber uma letra
+            document.getElementById("jogo2").appendChild(tile);
         }
 
     }
@@ -106,25 +146,54 @@ function processKey() {
 function processInput(e) {
     if (gameOver) return;// verificar se o jogo ja finalizou para n exceder nenhum comando
 
-    //alert(e.code);
+    
 
     //verificar se está em uma posição de receber uma letra
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
         if (col < width) {
-            let currTile = document.getElementById("jogo-" + row.toString() + "-" + col.toString());
-            if (currTile.innerText == "") {
+            if(!gameOver1)
+            {
+                let currTile = document.getElementById("jogo1-" + row.toString() + "-" + col.toString());
+            if (currTile.innerText == "")
+             {
                 currTile.innerText = e.code[3];
             }
-            col += 1;
+            
+            }
+
+            if(!gameOver2)
+            {
+                let currTile = document.getElementById("jogo2-" + row.toString() + "-" + col.toString());
+            if (currTile.innerText == "")
+             {
+                currTile.innerText = e.code[3];
+            }
+            
+            }
+            tentativa += e.code[3];
         }
-
+        col += 1;
     }
-    else if (e.code == "Backspace") {
-        if (0 < col && col <= width) {
-            col -= 1;
+    else if (e.code == "Backspace") 
+    {
+        if(col > width){
+            col = width;
+        }
+        if (0 < col && col <= width) 
+        {
 
-            let currTile = document.getElementById("jogo-" + row.toString() + "-" + col.toString());
-            currTile.innerText = "";
+            col -= 1;
+            if(!gameOver1)
+            {
+                let currTile = document.getElementById("jogo1-" + row.toString() + "-" + col.toString());
+                currTile.innerText = "";
+            }
+            if(!gameOver2)
+            {
+                let currTile = document.getElementById("jogo2-" + row.toString() + "-" + col.toString());
+                currTile.innerText = "";
+            }
+           tentativa = tentativa.substring(0, tentativa.length -1);
         }
     }
     else if (e.code == "Enter") {
@@ -133,7 +202,7 @@ function processInput(e) {
     }
     if (!gameOver && row == height) {
         gameOver = true;
-        document.getElementById("resposta").innerText = word;
+        document.getElementById("resposta").innerText ="Palavras: " + word1 + ", " + word2;
 
     }
 }
@@ -144,94 +213,170 @@ function RemoveAcentos(str){
 
 function update()
  {
-    let tentativa="";
-    document.getElementById("resposta").innerText = "";
-    for(let c = 0; c < width; c++)
-    {
-        let currTile = document.getElementById("jogo-" + row.toString() + "-" + c.toString());
-       let letter = currTile.innerText;
-       tentativa += letter;
-    }
-    tentativa = tentativa.toLowerCase();
+        document.getElementById("resposta").innerText = "";
+       
+        tentativa = tentativa.toLowerCase();
 
-    if(!wordList.includes(tentativa))
-    {
-          document.getElementById("resposta").innerText = "Palavra não aceita";
-          return;
-    }
-    let correto = 0;
-    let letterCount =[];
-    for(let i =0; i < word.length; i++)
-    {
-        letter = word[i];
-
-        if(letterCount[letter])
+        if(!wordListSemAcento.includes(tentativa))
         {
-            letter = word[i] +=1;
-        }else
-        {
-            letterCount[letter] =1;
+            document.getElementById("resposta").innerText = "Palavra não aceita";
+            return;
         }
-    }
-
-    //varrer todas as letras
-    for (let c = 0; c < width; c++) {
-        //localizar letras da temtativa atual
-        let currTile = document.getElementById("jogo-" + row.toString() + "-" + c.toString());
-       //receber a letra em uma variavel
-        let letter = currTile.innerText;
-
-      // verificar se a letra esta na posição correta
-        if (wordSemAcento[c] == letter) {
-            currTile.classList.add("correto");//se a posição e a letra estão corretas
-            correto += 1;
-            letterCount[letter] -=1;
-
-            let keyTile = document.getElementById("Key" + letter);
-            keyTile.classList.remove("contem");
-            keyTile.classList.add("correto");
-
-        }
-
-        if(correto == width){
-            gameOver = true;
-        }
-    }
     
-        for (let c = 0; c< width; c++){
-             //localizar letras da temtativa atual
-        let currTile = document.getElementById("jogo-" + row.toString() + "-" + c.toString());
-        //receber a letra em uma variavel
-         let letter = currTile.innerText;
-         if(!currTile.classList.contains("correto")){
-            if(wordSemAcento.includes(letter) && letterCount[letter] > 0){
-                currTile.classList.add("contem");
+        if(!gameOver1)
+        {
+            let correto = 0;
+        let letterCount ={};
+        for(let i =0; i < word1SemAcento.length; i++)
+        {
+            letter = word1SemAcento[i];
 
-                let keyTile = document.getElementById("Key" + letter);
-                if(!keyTile.classList.add("correto")){
-                    keyTile.classList.add("contem");
-
-                }
-                letterCount[letter] -=1;
+            if(letterCount[letter])
+            {
+                letter = word[i] +=1;
+            }else
+            {
+                letterCount[letter] =1;
             }
-            else{
-                currTile.classList.add("errado");
+        }
+
+        //varrer todas as letras
+        for (let c = 0; c < width; c++) {
+            //localizar letras da temtativa atual
+            let currTile = document.getElementById("jogo1-" + row.toString() + "-" + c.toString());
+        //receber a letra em uma variavel
+            let letter = currTile.innerText;
+
+        // verificar se a letra esta na posição correta
+            if (word1SemAcento[c] == letter) {
+                currTile.classList.add("correto");//se a posição e a letra estão corretas
+                correto += 1;
+                letterCount[letter] -=1;
+
                 let keyTile = document.getElementById("Key" + letter);
-                keyTile.classList.add("errado");
+                keyTile.classList.remove("contem");
+                keyTile.classList.add("correto");
+
+            }
+
+            if(correto == width){
+                gameOver1 = true;
             }
         }
         
-    }
+            for (let c = 0; c< width; c++){
+                //localizar letras da temtativa atual
+            let currTile = document.getElementById("jogo1-" + row.toString() + "-" + c.toString());
+            //receber a letra em uma variavel
+            let letter = currTile.innerText;
+            if(!currTile.classList.contains("correto")){
+                if(word1SemAcento.includes(letter) && letterCount[letter] > 0){
+                    currTile.classList.add("contem");
 
-        for(let c =0; c < width; c++){
-            let currTile = document.getElementById("jogo-" + row.toString () + "-" + c.toString())
-            currTile.innerText = tentativa[c].toUpperCase();
+                    let keyTile = document.getElementById("Key" + letter);
+                    if(!keyTile.classList.add("correto")){
+                        keyTile.classList.add("contem");
 
+                    }
+                    letterCount[letter] -=1;
+                }
+                else{
+                    currTile.classList.add("errado");
+                    let keyTile = document.getElementById("Key" + letter);
+                    keyTile.classList.add("errado");
+                }
+            }
+            
+        }
+
+            for(let c =0; c < width; c++){
+                let currTile = document.getElementById("jogo1-" + row.toString () + "-" + c.toString())
+                currTile.innerText = tentativa[c].toUpperCase();
+
+            }
+        }
+        
+        if(!gameOver2)
+        {
+            let correto = 0;
+        let letterCount ={};
+        for(let i =0; i < word2SemAcento.length; i++)
+        {
+            letter = word2SemAcento[i];
+
+            if(letterCount[letter])
+            {
+                letter = word[i] +=1;
+            }else
+            {
+                letterCount[letter] =1;
+            }
+        }
+
+        //varrer todas as letras
+        for (let c = 0; c < width; c++) {
+            //localizar letras da temtativa atual
+            let currTile = document.getElementById("jogo2-" + row.toString() + "-" + c.toString());
+        //receber a letra em uma variavel
+            let letter = currTile.innerText;
+
+        // verificar se a letra esta na posição correta
+            if (word2SemAcento[c] == letter) {
+                currTile.classList.add("correto");//se a posição e a letra estão corretas
+                correto += 1;
+                letterCount[letter] -=1;
+
+                let keyTile = document.getElementById("Key" + letter);
+                keyTile.classList.remove("contem");
+                keyTile.classList.add("correto");
+
+            }
+
+            if(correto == width){
+                gameOver2 = true;
+            }
+        }
+        
+            for (let c = 0; c< width; c++){
+                //localizar letras da temtativa atual
+            let currTile = document.getElementById("jogo2-" + row.toString() + "-" + c.toString());
+            //receber a letra em uma variavel
+            let letter = currTile.innerText;
+            if(!currTile.classList.contains("correto")){
+                if(word2SemAcento.includes(letter) && letterCount[letter] > 0){
+                    currTile.classList.add("contem");
+
+                    let keyTile = document.getElementById("Key" + letter);
+                    if(!keyTile.classList.add("correto")){
+                        keyTile.classList.add("contem");
+
+                    }
+                    letterCount[letter] -=1;
+                }
+                else{
+                    currTile.classList.add("errado");
+                    let keyTile = document.getElementById("Key" + letter);
+                    keyTile.classList.add("errado");
+                }
+            }
+            
+        }
+
+            for(let c =0; c < width; c++){
+                let currTile = document.getElementById("jogo2-" + row.toString () + "-" + c.toString())
+                currTile.innerText = tentativa[c].toUpperCase();
+
+            }
         }
        
-    
+    if(gameOver1 && gameOver2){
+        gameOver = true;
+
+        document.getElementById ("resposta").innerText = "Palavras: " + word1 + ", " + word2;
+    }
     row += 1;
     col = 0;
+    tentativa = "";
 }
 
 
