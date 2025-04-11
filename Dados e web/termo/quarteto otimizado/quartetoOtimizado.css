@@ -1,0 +1,136 @@
+body{
+    text-align: center;
+}
+
+#titulo{
+    font-size: 36px;
+    font-weight: bold;
+}
+
+#jogo
+{
+    display: flex;
+    justify-content: space-around;
+
+}
+
+#jogo1{
+
+    width: 350px;
+    height: 420px;
+    margin: 0 auto;
+    margin-top: 3px;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+#jogo2{
+
+    width: 350px;
+    height: 420px;
+    margin: 0 auto;
+    margin-top: 3px;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+#jogo3{
+
+    width: 350px;
+    height: 420px;
+    margin: 0 auto;
+    margin-top: 3px;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+#jogo4{
+
+    width: 350px;
+    height: 420px;
+    margin: 0 auto;
+    margin-top: 3px;
+    flex-wrap: wrap;
+    display: flex;
+}
+.game
+{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    margin: 10px;
+}
+.tile{
+
+    /*caixa*/
+    border: 2px solid slateblue;
+    width: 60px;
+    height: 60px;
+    margin: 2.5px;
+
+    /*Texto*/
+    color: black;
+    font-size: 36px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.correto{
+    background-color: chartreuse;
+    color: cornsilkS;
+    border-color: cornsilk;
+
+}
+
+.contem{
+    background-color: rgba(177, 179, 178, 0.753);
+    color: cornsilkS;
+    border-color: cornsilk;
+
+}
+
+.errado{
+    background-color: crimson ;
+    color: cornsilkS;
+    border-color: cornsilk;
+
+}
+
+.keyboard-row{
+    width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.key-tile{
+    /*Caixa*/
+    border: 1px solid lightskyblue;
+    width: 36px;
+    height: 40px;
+    margin: 1px;
+
+    /*Texto*/
+    font-size: 20px;
+     font-weight: bold;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+
+.enter-key-tile{
+    /*Caixa*/
+    border: 1px solid lightskyblue;
+    width: 76px;
+    height: 40px;
+    margin: 1px;
+
+    /*Texto*/
+    font-size: 20px;
+     font-weight: bold;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}

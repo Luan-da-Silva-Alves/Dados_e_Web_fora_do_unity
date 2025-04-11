@@ -85,6 +85,8 @@
         console.log(word3);
         console.log(word4);
 
+        
+
     }
     function initialize()//função que cria o jogo inicial
     {
